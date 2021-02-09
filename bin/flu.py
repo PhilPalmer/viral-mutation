@@ -32,6 +32,8 @@ def parse_args():
                         help='Analyze mutational semantic change')
     parser.add_argument('--combfit', action='store_true',
                         help='Analyze combinatorial fitness')
+    parser.add_argument('--fnames', type=str, default='data/influenza/ird_influenzaA_HA_allspecies.fa',
+                        help='Path to FASTA file containing HA sequences')
     args = parser.parse_args()
     return args
 
@@ -57,9 +59,8 @@ def load_meta(meta_fnames):
                 metas[accession] = meta
     return metas
 
-def process(fnames, meta_fnames):
-    metas = load_meta(meta_fnames)
-
+def process(fnames, meta_fnames=False):
+    # metas = load_meta(meta_fnames)
     seqs = {}
     for fname in fnames:
         for record in SeqIO.parse(fname, 'fasta'):
@@ -69,8 +70,11 @@ def process(fnames, meta_fnames):
                 continue
             if record.seq not in seqs:
                 seqs[record.seq] = []
-            accession = record.description.split('|')[0].split(':')[1]
-            seqs[record.seq].append(metas[accession])
+            # accession = record.description.split('|')[0].split(':')[1]
+            strain = record.description.split(' <unknown description>')[0]
+            accession_meta = { 'Name': record.name, 'Sequence Accession': record.id, 'Strain Name': strain }
+            # seqs[record.seq].append(metas[accession])
+            seqs[record.seq].append(accession_meta)
     return seqs
 
 def split_seqs(seqs, split_method='random'):
@@ -98,11 +102,10 @@ def split_seqs(seqs, split_method='random'):
     return train_seqs, test_seqs
 
 def setup(args):
-    fnames = [ 'data/influenza/ird_influenzaA_HA_allspecies.fa' ]
-    meta_fnames = [ 'data/influenza/ird_influenzaA_HA_allspecies_meta.tsv' ]
-
-    seqs = process(fnames, meta_fnames)
-
+    # fnames = [ 'data/influenza/ird_influenzaA_HA_allspecies.fa' ]
+    # meta_fnames = [ 'data/influenza/ird_influenzaA_HA_allspecies_meta.tsv' ]
+    fnames = [args.fnames]
+    seqs = process(fnames)
     seq_len = max([ len(seq) for seq in seqs ]) + 2
     vocab_size = len(AAs) + 2
 
