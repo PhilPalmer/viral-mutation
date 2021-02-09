@@ -187,49 +187,49 @@ def plot_umap(adata, namespace='flu'):
 
 def analyze_embedding(args, model, seqs, vocabulary):
     seqs = embed_seqs(args, model, seqs, vocabulary, use_cache=True)
+    # X, obs = [], {}
+    # obs['n_seq'] = []
+    # obs['seq'] = []
+    # for seq in seqs:
+    #     meta = seqs[seq][0]
+    #     X.append(meta['embedding'].mean(0))
+    #     for key in meta:
+    #         if key == 'embedding':
+    #             continue
+    #         if key not in obs:
+    #             obs[key] = []
+    #         obs[key].append(Counter([
+    #             meta[key] for meta in seqs[seq]
+    #         ]).most_common(1)[0][0])
+    #     obs['n_seq'].append(len(seqs[seq]))
+    #     obs['seq'].append(str(seq))
+    # print ("Done for loop")
+    # X = np.array(X)
 
-    X, obs = [], {}
-    obs['n_seq'] = []
-    obs['seq'] = []
-    for seq in seqs:
-        meta = seqs[seq][0]
-        X.append(meta['embedding'].mean(0))
-        for key in meta:
-            if key == 'embedding':
-                continue
-            if key not in obs:
-                obs[key] = []
-            obs[key].append(Counter([
-                meta[key] for meta in seqs[seq]
-            ]).most_common(1)[0][0])
-        obs['n_seq'].append(len(seqs[seq]))
-        obs['seq'].append(str(seq))
-    X = np.array(X)
+    # adata = AnnData(X)
+    # for key in obs:
+    #     adata.obs[key] = obs[key]
+    # adata = adata[
+    #     np.logical_or.reduce((
+    #         adata.obs['Host Species'] == 'human',
+    #         adata.obs['Host Species'] == 'avian',
+    #         adata.obs['Host Species'] == 'swine',
+    #     ))
+    # ]
 
-    adata = AnnData(X)
-    for key in obs:
-        adata.obs[key] = obs[key]
-    adata = adata[
-        np.logical_or.reduce((
-            adata.obs['Host Species'] == 'human',
-            adata.obs['Host Species'] == 'avian',
-            adata.obs['Host Species'] == 'swine',
-        ))
-    ]
+    # sc.pp.neighbors(adata, n_neighbors=100, use_rep='X')
+    # sc.tl.louvain(adata, resolution=1.)
 
-    sc.pp.neighbors(adata, n_neighbors=100, use_rep='X')
-    sc.tl.louvain(adata, resolution=1.)
+    # sc.set_figure_params(dpi_save=500)
 
-    sc.set_figure_params(dpi_save=500)
+    # sc.tl.umap(adata, min_dist=1.)
+    # plot_umap(adata)
+    # plot_umap(adata[adata.obs['louvain'] == '30'],
+    #           namespace='flu1918')
 
-    sc.tl.umap(adata, min_dist=1.)
-    plot_umap(adata)
-    plot_umap(adata[adata.obs['louvain'] == '30'],
-              namespace='flu1918')
+    # interpret_clusters(adata)
 
-    interpret_clusters(adata)
-
-    seq_clusters(adata)
+    # seq_clusters(adata)
 
 if __name__ == '__main__':
     args = parse_args()
@@ -261,7 +261,8 @@ if __name__ == '__main__':
         if args.model_name in no_embed:
             raise ValueError('Embeddings not available for models: {}'
                              .format(', '.join(no_embed)))
-        analyze_embedding(args, model, seqs, vocabulary)
+        # analyze_embedding(args, model, seqs, vocabulary)
+        seqs = embed_seqs(args, model, seqs, vocabulary, use_cache=True)
 
     if args.semantics:
         if args.checkpoint is None and not args.train:
