@@ -25,6 +25,17 @@ To run the experiments below, download the data (instructions above). Our experi
 
 #### Influenza HA
 
+Test generating vector embeddings for Influenza HA sequences from a FASTA file for the first 10 sequences truncated to a length of 4 amino acids:
+```
+python bin/flu.py bilstm \
+  --checkpoint models/flu.hdf5 \
+  --embed \
+  --fnames data/influenza/ird_influenzaA_HA_allspecies.fa \
+  --aa_len 4 \
+  --n_seqs 10 \
+  > flu_embed.log 2>&1
+```
+
 Influenza HA semantic embedding UMAPs and log files with statistics can be generated with the command
 ```bash
 python bin/flu.py bilstm --checkpoint models/flu.hdf5 --embed \

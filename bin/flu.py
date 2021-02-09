@@ -36,6 +36,8 @@ def parse_args():
                         help='Path to FASTA file containing HA sequences')
     parser.add_argument('--aa_len', type=int, default=None,
                         help='Truncate size of HA length for testing purposes')
+    parser.add_argument('--n_seqs', type=int, default=None,
+                        help='Redeuce the number of HA sequences for testing purposes')
     args = parser.parse_args()
     return args
 
@@ -260,6 +262,9 @@ if __name__ == '__main__':
 
     if args.aa_len:
       seqs = {key[0:args.aa_len]:value for (key,value) in seqs.items()}
+
+    if args.n_seqs:
+      seqs = {k: seqs[k] for k in list(seqs)[:args.n_seqs]}
 
     if args.embed:
         if args.checkpoint is None and not args.train:
