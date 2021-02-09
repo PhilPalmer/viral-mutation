@@ -34,6 +34,8 @@ def parse_args():
                         help='Analyze combinatorial fitness')
     parser.add_argument('--fnames', type=str, default='data/influenza/ird_influenzaA_HA_allspecies.fa',
                         help='Path to FASTA file containing HA sequences')
+    parser.add_argument('--aa_len', type=int, default=None,
+                        help='Truncate size of HA length for testing purposes')
     args = parser.parse_args()
     return args
 
@@ -255,6 +257,9 @@ if __name__ == '__main__':
 
     if args.train or args.train_split or args.test:
         train_test(args, model, seqs, vocabulary, split_seqs)
+
+    if args.aa_len:
+      seqs = {key[0:args.aa_len]:value for (key,value) in seqs.items()}
 
     if args.embed:
         if args.checkpoint is None and not args.train:
