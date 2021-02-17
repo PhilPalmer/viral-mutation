@@ -75,8 +75,7 @@ def process(fnames, meta_fnames=False):
             if record.seq not in seqs:
                 seqs[record.seq] = []
             # accession = record.description.split('|')[0].split(':')[1]
-            strain = record.description.split(' <unknown description>')[0]
-            accession_meta = { 'Name': record.name, 'Sequence Accession': record.id, 'Strain Name': strain }
+            accession_meta = { 'Strain Name': record.description.split(' <unknown description>')[0] }
             # seqs[record.seq].append(metas[accession])
             seqs[record.seq].append(accession_meta)
     return seqs
