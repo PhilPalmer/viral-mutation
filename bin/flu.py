@@ -210,7 +210,6 @@ def analyze_embedding(args, model, seqs, vocabulary):
             ]).most_common(1)[0][0])
         obs['n_seq'].append(len(seqs[seq]))
         obs['seq'].append(str(seq))
-    print ("Done for loop")
     X = np.array(X)
 
     adata = AnnData(X)
