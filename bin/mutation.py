@@ -95,7 +95,7 @@ def featurize_seqs(seqs, vocabulary):
     sorted_seqs = sorted(seqs.keys())
     X = np.concatenate([
         np.array([ start_int ] + [
-            vocabulary[word] for word in seq
+            vocabulary[word] if word != '-' else 27 for word in seq
         ] + [ end_int ]) for seq in sorted_seqs
     ]).reshape(-1, 1)
     lens = np.array([ len(seq) + 2 for seq in sorted_seqs ])
